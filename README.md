@@ -493519,4 +493519,611 @@ function Backend.loadProgramData()
     return data
 end
 
-return runApplication()
+
+-- ========== 中文顯示對照（不修改任何功能邏輯 / Values）==========
+local ZH = {
+    ["Combat"]="戰鬥",["Movement"]="移動",["Visuals"]="視覺",["Misc"]="雜項",
+    ["Settings"]="設定",["Configuration"]="配置",["Cosmetics"]="造型",
+    ["Camera"]="鏡頭",["Crosshair"]="準星",["Players"]="玩家",["World"]="世界",
+    ["Menu"]="選單",["General"]="一般",["Advanced"]="進階",["Other"]="其他",
+    ["Options"]="選項",["Automation"]="自動化",["Detection"]="偵測",["Presets"]="預設",
+    ["Theme"]="主題",["Themes"]="主題",["Keybinds"]="快捷鍵",["Keybind"]="快捷鍵",
+    ["Watermark"]="浮水印",["Notifications"]="通知",["Unload"]="卸載",
+    ["Refresh"]="重新整理",["Search"]="搜尋",["Filter"]="過濾",["Priority"]="優先",
+    ["Mode"]="模式",["Style"]="樣式",["Color"]="顏色",["Size"]="大小",
+    ["Visible"]="可見",["Enabled"]="已啟用",["Disabled"]="已停用",
+    ["Enable"]="啟用",["Disable"]="停用",["Default"]="預設",["Custom"]="自訂",
+    ["Save"]="儲存",["Load"]="載入",["Delete"]="刪除",["Apply"]="套用",["Reset"]="重置",
+    ["Close"]="關閉",["Open"]="開啟",["Enemy"]="敵人",["Enemies"]="敵人",
+    ["Teammate"]="隊友",["Teammates"]="隊友",["Team"]="隊伍",["Player"]="玩家",
+    ["Weapon"]="武器",["Health"]="血量",["Distance"]="距離",["Name"]="名稱",
+    ["Speed"]="速度",["Jump"]="跳躍",["Fly"]="飛行",["Noclip"]="穿牆",
+    ["Box"]="方框",["Skeleton"]="骨架",["Tracer"]="射線",["Chams"]="透視材質",
+    ["ESP"]="透視",["Aimbot"]="自瞄",["Silent Aim"]="靜默自瞄",
+    ["Triggerbot"]="自動開槍",["Ragebot"]="狂暴自瞄",["Anti Aim"]="反自瞄",
+    ["anti aim"]="反自瞄",["Skins"]="皮膚",["Wraps"]="包裝",["Charms"]="掛飾",
+    ["Finishers"]="終結技",["Primary"]="主武器",["Secondary"]="副武器",
+    ["Melee"]="近戰",["Utility"]="道具",
+    ["Enable Aimbot"]="啟用自瞄",["Enable Silent Aim"]="啟用靜默自瞄",
+    ["Enable Triggerbot"]="啟用自動開槍",["Enable Ragebot"]="啟用狂暴自瞄",
+    ["Enable ESP"]="啟用透視",["Hit Chance"]="命中率",["hit chance"]="命中率",
+    ["always backstab"]="總是背刺",["anti katana"]="反武士刀",["Anti Katana"]="反武士刀",
+    ["Reduce Recoil"]="降低後座力",["No Recoil"]="無後座力",["No Spread"]="無擴散",
+    ["Target Lock"]="目標鎖定",["Team Check"]="隊友檢查",["Wall Check"]="牆壁檢查",
+    ["Visible Check"]="可見檢查",["team check"]="隊友檢查",["wall check"]="牆壁檢查",
+    ["include teammates"]="包含隊友",["attack mode"]="攻擊模式",
+    ["ban weapons"]="禁用武器",["auto ban"]="自動禁用",["through walls"]="穿牆命中",
+    ["full auto"]="全自動",["Prediction"]="預測",["Smoothing"]="平滑",
+    ["Aim Part"]="瞄準部位",["show fov"]="顯示視野圈",["Show FOV"]="顯示視野圈",
+    ["fov changer"]="視野變更",["FOV Changer"]="視野變更",
+    ["Health Bar"]="血量條",["Ammo Bar"]="彈藥條",["Filled Box"]="填充方框",
+    ["Head Marker"]="頭部標記",["Health Number"]="血量數值",["Held Weapon"]="持有武器",
+    ["Win Streak"]="連勝",["Sound ESP"]="聲音透視",["Skeleton ESP"]="骨架透視",
+    ["Box ESP"]="方框透視",["Name Tags"]="名稱標籤",["Distance Tags"]="距離標籤",
+    ["Weapon Tags"]="武器標籤",["custom tracers"]="自訂軌跡",
+    ["Bullet Tracers"]="子彈軌跡",["bullet tracers"]="子彈軌跡",
+    ["tracer customization"]="軌跡自訂",["cham settings"]="透視材質設定",
+    ["highlight settings"]="高亮設定",["esp settings"]="透視設定",
+    ["max distance"]="最大距離",["Max Distance"]="最大距離",
+    ["Fly Speed"]="飛行速度",["fly speed"]="飛行速度",
+    ["Walk Speed"]="走路速度",["walk speed"]="走路速度",
+    ["infinite double jump"]="無限二段跳",["double jump height"]="二段跳高度",
+    ["slide boost"]="滑行加速",["Long Jump"]="大跳",["Auto Strafe"]="自動掃射",
+    ["Sliding"]="滑行",["movement settings"]="移動設定",
+    ["Third Person"]="第三人稱",["third person"]="第三人稱",
+    ["First Person"]="第一人稱",["anti flashbang"]="反閃光彈",
+    ["Hide Flashbang Effect"]="隱藏閃光彈效果",["aspect ratio"]="長寬比",
+    ["Enable Crosshair"]="啟用準星",["Enable Third Person"]="啟用第三人稱",
+    ["disable game crosshair"]="停用遊戲準星",["Camera & Screen"]="鏡頭與螢幕",
+    ["Weapon Visuals"]="武器視覺",["viewmodel appearance"]="第一人稱模型外觀",
+    ["Remove Camera Shake"]="移除鏡頭震動",["Remove Camera Sway"]="移除鏡頭搖擺",
+    ["crosshair settings"]="準星設定",["camera settings"]="鏡頭設定",
+    ["Color Correction"]="色彩校正",["color correction"]="色彩校正",
+    ["Accent Color"]="強調色",["Background Color"]="背景色",
+    ["Font Color"]="字體顏色",["Outline Color"]="描邊顏色",
+    ["Transparency"]="透明度",["Thickness"]="粗細",
+    ["auto respawn"]="自動重生",["Auto Respawn"]="自動重生",
+    ["auto queue"]="自動排隊",["Auto Queue"]="自動排隊",
+    ["auto load"]="自動載入",["Auto Load"]="自動載入",
+    ["auto select"]="自動選擇",["arcade servers"]="街機伺服器",
+    ["Cosmetic Changer"]="造型更換器",["cosmetic filter"]="造型過濾",
+    ["Config"]="設定檔",["Configs"]="設定檔",["Config name"]="設定檔名稱",
+    ["Config list"]="設定檔列表",["config list"]="設定檔列表",
+    ["Create config"]="建立設定檔",["Create theme"]="建立主題",
+    ["Copy config to clipboard"]="複製設定檔到剪貼簿",
+    ["Import from clipboard"]="從剪貼簿匯入",["community configs"]="社群設定檔",
+    ["Set autoload"]="設為自動載入",["Remove autoload"]="移除自動載入",
+    ["Current autoload config: none"]="目前自動載入：無",
+    ["Menu keybind"]="選單快捷鍵",["Keybind Menu"]="快捷鍵選單",
+    ["animation player"]="動畫播放器",["Animation Player"]="動畫播放器",
+    ["info spoofer"]="資訊偽裝",["name spoofer"]="名稱偽裝",
+    ["spoof device"]="裝置偽裝",["Moderator Detector"]="管理員偵測",
+    ["Hacker Detector"]="外掛偵測",
+    ["Player List"]="玩家列表",["Spectator List"]="觀戰列表",
+    ["Target List"]="目標列表",["Keybind List"]="快捷鍵列表",
+    ["Save config"]="儲存設定檔",["Load config"]="載入設定檔",
+    ["Delete config"]="刪除設定檔",
+    -- 下拉顯示用（只改畫面文字）
+    ["Always"]="總是",["Toggle"]="切換",["Hold"]="按住",["None"]="無",
+    ["Head"]="頭部",["Torso"]="軀幹",["Closest"]="最近",
+    ["Linear"]="線性",["Smooth"]="平滑",["Instant"]="瞬間",
+    ["Left"]="左",["Right"]="右",["Top"]="上",["Bottom"]="下",
+    ["Center"]="中",["High"]="高",["Low"]="低",["Medium"]="中",
+    ["Gun"]="槍",["All"]="全部",["Auto"]="自動",["Manual"]="手動",
+    ["Random"]="隨機",["Solid"]="純色",["Gradient"]="漸層",["Rainbow"]="彩虹",
+    ["Corner"]="邊角",["Full"]="完整",["Outline"]="描邊",["Filled"]="填充",
+    ["2D"]="2D",["3D"]="3D",["Client"]="客戶端",["Server"]="伺服器",
+    ["Silent"]="靜默",["Rage"]="狂暴",["Legit"]="合法",
+
+    -- 截圖補齊 World / Main
+    ["main"] = "主頁",
+    ["character"] = "角色",
+
+    ["ColorShift_Top"] = "頂部色偏",
+    ["ColorShift_Bottom"] = "底部色偏",
+    ["FogColor"] = "霧顏色",
+    ["FogEnd"] = "霧結束距離",
+    ["FogStart"] = "霧起始距離",
+    ["ExposureCompensation"] = "曝光補償",
+    ["Brightness"] = "亮度",
+    ["ClockTime"] = "時鐘時間",
+    ["GlobalShadows"] = "全域陰影",
+    ["intensity"] = "強度",
+    ["Intensity"] = "強度",
+    ["size"] = "大小",
+    ["threshold"] = "閾值",
+    ["Threshold"] = "閾值",
+    ["fov"] = "視野",
+    ["atmosphere"] = "大氣",
+    ["Atmosphere"] = "大氣",
+    ["skybox"] = "天空盒",
+    ["Skybox"] = "天空盒",
+    ["weather"] = "天氣",
+    ["Weather"] = "天氣",
+    ["ambience"] = "環境音",
+    ["Ambience"] = "環境音",
+    ["saturation"] = "飽和度",
+    ["Saturation"] = "飽和度",
+    ["contrast"] = "對比",
+    ["Contrast"] = "對比",
+    ["brightness"] = "亮度",
+    ["selected"] = "已選",
+    ["Selected"] = "已選",
+    ["Cloudy"] = "多雲",
+    ["Sunny"] = "晴朗",
+    ["Rainy"] = "雨天",
+    ["lighting"] = "光照",
+    ["Lighting"] = "光照",
+    ["Ambient"] = "環境光",
+    ["bloom"] = "泛光",
+    ["Bloom"] = "泛光",
+    ["sun rays"] = "陽光射線",
+    ["Sun Rays"] = "陽光射線",
+    ["targeting"] = "瞄準目標",
+    ["Targeting"] = "瞄準目標",
+    ["visible only"] = "僅可見目標",
+    ["Visible Only"] = "僅可見目標",
+    ["ignore protected"] = "忽略受保護",
+    ["Ignore Protected"] = "忽略受保護",
+    ["ignore if"] = "忽略條件",
+    ["Ignore If"] = "忽略條件",
+    ["blocked by riot shield, katana"] = "被防爆盾、武士刀阻擋",
+    ["blocked by riot shield"] = "被防爆盾阻擋",
+    ["disable on flash"] = "閃光時停用",
+    ["Disable On Flash"] = "閃光時停用",
+    ["limit distance"] = "限制距離",
+    ["Limit Distance"] = "限制距離",
+    ["reaction time"] = "反應時間",
+    ["Reaction Time"] = "反應時間",
+    ["weapons"] = "武器",
+    ["Weapons"] = "武器",
+    ["grenade options"] = "手榴彈選項",
+    ["Grenade Options"] = "手榴彈選項",
+    ["firerate"] = "射速",
+    ["Fire Rate"] = "射速",
+    ["forget time"] = "遺忘時間",
+    ["Forget Time"] = "遺忘時間",
+    ["target part"] = "目標部位",
+    ["Target Part"] = "目標部位",
+    ["HumanoidRootPart"] = "角色根部",
+    ["closest part blacklist"] = "最近部位黑名單",
+    ["Closest Part Blacklist"] = "最近部位黑名單",
+    ["LeftHand"] = "左手",
+    ["RightHand"] = "右手",
+    ["LeftLowerArm"] = "左小臂",
+    ["RightLowerArm"] = "右小臂",
+    ["LeftUpperArm"] = "左上臂",
+    ["RightUpperArm"] = "右上臂",
+    ["auto prioritize"] = "自動優先",
+    ["Auto Prioritize"] = "自動優先",
+    ["send notification"] = "發送通知",
+    ["Send Notification"] = "發送通知",
+    ["auto priority settings"] = "自動優先設定",
+    ["Auto Priority Settings"] = "自動優先設定",
+    ["attackers"] = "攻擊者",
+    ["Attackers"] = "攻擊者",
+    ["voided players"] = "虛空玩家",
+    ["Voided Players"] = "虛空玩家",
+    ["attackers, voided players"] = "攻擊者、虛空玩家",
+    ["LeftHand, LeftLowerArm,"] = "左手、左小臂",
+    ["Enabled"] = "已啟用",
+    ["Disabled"] = "已停用",
+    ["..."] = "...",
+
+
+    -- 透視分頁截圖補齊
+    ["healthbar"] = "血條",
+    ["Healthbar"] = "血條",
+    ["Health Bar"] = "血條",
+    ["resize outline"] = "縮放描邊",
+    ["Resize Outline"] = "縮放描邊",
+    ["moving healthbar"] = "動態血條",
+    ["Moving Healthbar"] = "動態血條",
+    ["healthbar type"] = "血條類型",
+    ["Healthbar Type"] = "血條類型",
+    ["slices"] = "分段",
+    ["Slices"] = "分段",
+    ["health lerp"] = "血量平滑",
+    ["Health Lerp"] = "血量平滑",
+    ["customization"] = "自訂",
+    ["Customization"] = "自訂",
+    ["bounding mode"] = "邊界模式",
+    ["Bounding Mode"] = "邊界模式",
+    ["fixed"] = "固定",
+    ["Fixed"] = "固定",
+    ["fixed width scale"] = "固定寬度比例",
+    ["Fixed Width Scale"] = "固定寬度比例",
+    ["font"] = "字體",
+    ["Font"] = "字體",
+    ["proggy clean"] = "Proggy Clean",
+    ["name type"] = "名稱類型",
+    ["Name Type"] = "名稱類型",
+    ["highlight"] = "高亮",
+    ["Highlight"] = "高亮",
+    ["effects"] = "特效",
+    ["Effects"] = "特效",
+    ["fill transparency"] = "填充透明度",
+    ["Fill Transparency"] = "填充透明度",
+    ["outline transparency"] = "描邊透明度",
+    ["Outline Transparency"] = "描邊透明度",
+    ["override appearance"] = "覆蓋外觀",
+    ["Override Appearance"] = "覆蓋外觀",
+    ["material"] = "材質",
+    ["Material"] = "材質",
+    ["font override"] = "字體覆蓋",
+    ["Font Override"] = "字體覆蓋",
+    ["rotation"] = "旋轉",
+    ["Rotation"] = "旋轉",
+    ["moving rotation"] = "動態旋轉",
+    ["Moving Rotation"] = "動態旋轉",
+    ["fill"] = "填充",
+    ["Fill"] = "填充",
+    ["fill image"] = "填充圖片",
+    ["Fill Image"] = "填充圖片",
+    ["flags"] = "標記",
+    ["Flags"] = "標記",
+    ["speed"] = "速度",
+    ["Speed"] = "速度",
+    ["include teammates"] = "包含隊友",
+    ["bounding"] = "邊界",
+    ["dynamic"] = "動態",
+    ["Dynamic"] = "動態",
+    ["static"] = "靜態",
+    ["Static"] = "靜態",
+    ["gradient"] = "漸層",
+    ["Gradient"] = "漸層",
+    ["solid"] = "純色",
+    ["Solid"] = "純色",
+    ["corner"] = "邊角",
+    ["Corner"] = "邊角",
+    ["full"] = "完整",
+    ["Full"] = "完整",
+    ["outline"] = "描邊",
+    ["Outline"] = "描邊",
+    ["filled"] = "填充",
+    ["Filled"] = "填充",
+    ["box"] = "方框",
+    ["name"] = "名稱",
+    ["distance"] = "距離",
+    ["weapon"] = "武器",
+    ["options"] = "選項",
+    ["Options"] = "選項",
+    ["world"] = "世界",
+    ["World"] = "世界",
+
+
+    -- 批次截圖補齊 9416-9435
+    ["manipulation"] = "操控",
+    ["Manipulation"] = "操控",
+    ["closest part"] = "最近部位",
+    ["Closest Part"] = "最近部位",
+    ["visualize"] = "視覺化",
+    ["Visualize"] = "視覺化",
+    ["radius"] = "半徑",
+    ["Radius"] = "半徑",
+    ["glare"] = "眩光",
+    ["Glare"] = "眩光",
+    ["haze"] = "霧霾",
+    ["Haze"] = "霧霾",
+    ["offset"] = "偏移",
+    ["Offset"] = "偏移",
+    ["density"] = "密度",
+    ["Density"] = "密度",
+    ["Rain"] = "雨",
+    ["Heavy Rain"] = "大雨",
+    ["rate"] = "速率",
+    ["Rate"] = "速率",
+    ["lifetime"] = "生命週期",
+    ["Lifetime"] = "生命週期",
+    ["timescale"] = "時間倍率",
+    ["Timescale"] = "時間倍率",
+    ["volume"] = "音量",
+    ["Volume"] = "音量",
+    ["staring text"] = "注視文字",
+    ["Staring Text"] = "注視文字",
+    ["health text"] = "血量文字",
+    ["Health Text"] = "血量文字",
+    ["smallest pixel"] = "最小像素",
+    ["upper"] = "大寫",
+    ["Upper"] = "大寫",
+    ["lower"] = "小寫",
+    ["Lower"] = "小寫",
+    ["prefix"] = "前綴",
+    ["Prefix"] = "前綴",
+    ["minimal"] = "精簡",
+    ["Minimal"] = "精簡",
+    ["bridge only"] = "僅橋接",
+    ["Bridge Only"] = "僅橋接",
+    ["decal"] = "貼花",
+    ["decals"] = "貼花",
+    ["Decals"] = "貼花",
+    ["clothing"] = "服裝",
+    ["Clothing"] = "服裝",
+    ["particle"] = "粒子",
+    ["Particle"] = "粒子",
+    ["aura"] = "光環",
+    ["Aura"] = "光環",
+    ["image"] = "圖片",
+    ["Image"] = "圖片",
+    ["object scale"] = "物件縮放",
+    ["Object Scale"] = "物件縮放",
+    ["lerp"] = "平滑",
+    ["Lerp"] = "平滑",
+    ["fade"] = "淡出",
+    ["Fade"] = "淡出",
+    ["fade style"] = "淡出樣式",
+    ["Fade Style"] = "淡出樣式",
+    ["shrink fade"] = "縮小淡出",
+    ["Shrink Fade"] = "縮小淡出",
+    ["whitelist"] = "白名單",
+    ["Whitelist"] = "白名單",
+    ["viewmodel"] = "第一人稱模型",
+    ["Viewmodel"] = "第一人稱模型",
+    ["override"] = "覆蓋",
+    ["Override"] = "覆蓋",
+    ["item"] = "物品",
+    ["Item"] = "物品",
+    ["show cosmetics changer"] = "顯示造型更換器",
+    ["bobbing, muzzle flash"] = "晃動、槍口火光",
+    ["bobbing"] = "晃動",
+    ["muzzle flash"] = "槍口火光",
+    ["override fps"] = "覆蓋幀率",
+    ["Override FPS"] = "覆蓋幀率",
+    ["recoil percent"] = "後座力百分比",
+    ["Recoil Percent"] = "後座力百分比",
+    ["hit effects"] = "命中特效",
+    ["Hit Effects"] = "命中特效",
+    ["hit sounds"] = "命中音效",
+    ["Hit Sounds"] = "命中音效",
+    ["weld to player"] = "焊接到玩家",
+    ["Weld To Player"] = "焊接到玩家",
+    ["effects selected"] = "已選特效",
+    ["Effects Selected"] = "已選特效",
+    ["fortnite damage"] = "Fortnite 傷害",
+    ["effect settings"] = "特效設定",
+    ["Effect Settings"] = "特效設定",
+    ["stack damage together"] = "傷害疊加顯示",
+    ["Stack Damage Together"] = "傷害疊加顯示",
+    ["preferred material"] = "偏好材質",
+    ["Preferred Material"] = "偏好材質",
+    ["Neon"] = "霓虹",
+    ["arm appearance"] = "手臂外觀",
+    ["Arm Appearance"] = "手臂外觀",
+    ["shoot sound"] = "射擊音效",
+    ["Shoot Sound"] = "射擊音效",
+    ["remove vignette"] = "移除暗角",
+    ["Remove Vignette"] = "移除暗角",
+    ["override weapon status"] = "覆蓋武器狀態",
+    ["Override Weapon Status"] = "覆蓋武器狀態",
+    ["status"] = "狀態",
+    ["Status"] = "狀態",
+    ["Prime"] = "Prime",
+    ["sound"] = "音效",
+    ["Sound"] = "音效",
+    ["neverlose"] = "Neverlose",
+    ["preview sound"] = "預覽音效",
+    ["Preview Sound"] = "預覽音效",
+    ["remove hit sound"] = "移除命中音效",
+    ["Remove Hit Sound"] = "移除命中音效",
+    ["target hud"] = "目標 HUD",
+    ["Target HUD"] = "目標 HUD",
+    ["indicators"] = "指示器",
+    ["Indicators"] = "指示器",
+    ["manipulated"] = "已操控",
+    ["Manipulated"] = "已操控",
+    ["ragebot style"] = "狂暴自瞄樣式",
+    ["Ragebot Style"] = "狂暴自瞄樣式",
+    ["text, status"] = "文字、狀態",
+    ["text style"] = "文字樣式",
+    ["Text Style"] = "文字樣式",
+    ["position"] = "位置",
+    ["Position"] = "位置",
+    ["change sound"] = "更改音效",
+    ["Change Sound"] = "更改音效",
+    ["target"] = "目標",
+    ["Target"] = "目標",
+    ["ammo"] = "彈藥",
+    ["Ammo"] = "彈藥",
+    ["offset x"] = "X 偏移",
+    ["offset y"] = "Y 偏移",
+    ["Offset X"] = "X 偏移",
+    ["Offset Y"] = "Y 偏移",
+    ["velocity"] = "速度向量",
+    ["Velocity"] = "速度向量",
+    ["velocity speed"] = "速度向量數值",
+    ["Velocity Speed"] = "速度向量數值",
+    ["maul slam multiplier"] = "重擊倍率",
+    ["Maul Slam Multiplier"] = "重擊倍率",
+    ["animation"] = "動畫",
+    ["Animation"] = "動畫",
+    ["gangnam style"] = "江南 Style",
+    ["custom animation"] = "自訂動畫",
+    ["Custom Animation"] = "自訂動畫",
+    ["start"] = "開始",
+    ["Start"] = "開始",
+    ["end"] = "結束",
+    ["End"] = "結束",
+    ["silent mode"] = "靜音模式",
+    ["Silent Mode"] = "靜音模式",
+    ["loadout"] = "裝備配置",
+    ["Loadout"] = "裝備配置",
+    ["ban random map"] = "隨機禁用地圖",
+    ["Ban Random Map"] = "隨機禁用地圖",
+    ["map ban delay"] = "地圖禁用延遲",
+    ["Map Ban Delay"] = "地圖禁用延遲",
+    ["first ban"] = "第一禁用",
+    ["First Ban"] = "第一禁用",
+    ["second ban"] = "第二禁用",
+    ["Second Ban"] = "第二禁用",
+    ["Assault Rifle"] = "突擊步槍",
+    ["Handgun"] = "手槍",
+    ["Riot Shield"] = "防爆盾",
+    ["Katana"] = "武士刀",
+    ["Grenade"] = "手榴彈",
+    ["Molotov"] = "燃燒瓶",
+    ["Satchel"] = "炸藥包",
+    ["monocraft bold"] = "Monocraft Bold",
+    ["Proggy Clean"] = "Proggy Clean",
+    ["proggy tiny"] = "Proggy Tiny",
+    ["pixel arial"] = "Pixel Arial",
+    ["monocraft"] = "Monocraft",
+    ["ubuntu"] = "Ubuntu",
+    ["tahoma"] = "Tahoma",
+
+
+    -- 設定 / 雜項截圖
+    ["Custom themes"] = "自訂主題",
+    ["Custom Themes"] = "自訂主題",
+    ["Load theme"] = "載入主題",
+    ["Load Theme"] = "載入主題",
+    ["Overwrite Theme"] = "覆蓋主題",
+    ["Delete Theme"] = "刪除主題",
+    ["Set Default"] = "設為預設",
+    ["Reset Default"] = "重設預設",
+    ["Overwrite config"] = "覆蓋設定檔",
+    ["Overwrite Config"] = "覆蓋設定檔",
+    ["Main Color"] = "主色",
+    ["Text Color"] = "文字顏色",
+    ["Risk Text Color"] = "危險文字顏色",
+    ["Theme list"] = "主題列表",
+    ["Theme List"] = "主題列表",
+    ["Refresh list"] = "重新整理列表",
+    ["Refresh List"] = "重新整理列表",
+    ["Current autoload config:"] = "目前自動載入：",
+    ["Current autoload config: "] = "目前自動載入：",
+    ["Clip Descendants"] = "裁剪子物件",
+    ["Clip Past Distance"] = "超過距離裁剪",
+    ["Force Color"] = "強制顏色",
+    ["Position X"] = "位置 X",
+    ["Position Y"] = "位置 Y",
+    ["Alignment"] = "對齊",
+    ["in order"] = "依序",
+    ["In Order"] = "依序",
+    ["chat mode"] = "聊天模式",
+    ["Chat Mode"] = "聊天模式",
+    ["random custom text"] = "隨機自訂文字",
+    ["Random Custom Text"] = "隨機自訂文字",
+    ["add custom text"] = "新增自訂文字",
+    ["Add Custom Text"] = "新增自訂文字",
+    ["message..."] = "訊息...",
+    ["refresh modes"] = "重新整理模式",
+    ["Refresh Modes"] = "重新整理模式",
+    ["automatically grab drops"] = "自動撿取掉落物",
+    ["Automatically Grab Drops"] = "自動撿取掉落物",
+    ["notify hit"] = "命中通知",
+    ["Notify Hit"] = "命中通知",
+    ["notify duration"] = "通知時長",
+    ["Notify Duration"] = "通知時長",
+    ["random notify text"] = "隨機通知文字",
+    ["Random Notify Text"] = "隨機通知文字",
+    ["ALL FORMATTING:"] = "全部格式變數：",
+    ["ex: {NAME}, {DMG}, {PART}"] = "例：{NAME}, {DMG}, {PART}",
+
+}
+
+do
+    local lower = {}
+    for k, v in pairs(ZH) do
+        lower[string.lower(k)] = v
+    end
+    for k, v in pairs(lower) do
+        if ZH[k] == nil then ZH[k] = v end
+    end
+end
+
+local __ue_result = runApplication()
+
+task.spawn(function()
+    -- 這些按鈕文字若被翻譯會導致點擊邏輯失效，永遠不翻
+    local SKIP = {
+        ["Lock UI"] = true, ["Unlock UI"] = true, ["Toggle UI"] = true,
+        ["鎖定介面"] = true, ["解鎖介面"] = true, ["開關介面"] = true,
+    }
+    local lastText = setmetatable({}, { __mode = "k" })
+    local busy = setmetatable({}, { __mode = "k" })
+    local hooked = setmetatable({}, { __mode = "k" })
+
+    local function tr(s)
+        if type(s) ~= "string" or s == "" or SKIP[s] then return nil end
+        local hit = ZH[s] or ZH[string.lower(s)]
+        if hit then return hit end
+        local label, rest = string.match(s, "^([%w%s%-%_]+):%s*(.*)$")
+        if label and not SKIP[label] then
+            local zl = ZH[label] or ZH[string.lower(label)]
+            if zl then
+                return (rest and rest ~= "") and (zl .. ": " .. rest) or zl
+            end
+        end
+        if string.find(s, ",", 1, true) then
+            local parts = string.split(s, ",")
+            local out, any = {}, false
+            for i, p in ipairs(parts) do
+                local t = p:match("^%s*(.-)%s*$") or p
+                if SKIP[t] then
+                    out[i] = t
+                else
+                    local z = ZH[t] or ZH[string.lower(t)]
+                    if z then any = true; out[i] = z else out[i] = t end
+                end
+            end
+            if any then return table.concat(out, ", ") end
+        end
+        return nil
+    end
+
+    local function apply(inst)
+        if not inst or busy[inst] then return end
+        if not (inst:IsA("TextLabel") or inst:IsA("TextButton") or inst:IsA("TextBox")) then return end
+        local raw = inst.Text
+        if type(raw) ~= "string" or raw == "" or SKIP[raw] then return end
+        if lastText[inst] == raw then return end
+        -- 已含中文則略過
+        if utf8.len(raw) and raw:match("[\228-\233][\128-\191][\128-\191]") then
+            lastText[inst] = raw
+            return
+        end
+        local zh = tr(raw)
+        if zh and zh ~= raw then
+            busy[inst] = true
+            inst.Text = zh
+            lastText[inst] = zh
+            busy[inst] = nil
+        else
+            lastText[inst] = raw
+        end
+    end
+
+    local function hook(inst)
+        if hooked[inst] then return end
+        if not (inst:IsA("TextLabel") or inst:IsA("TextButton") or inst:IsA("TextBox")) then return end
+        hooked[inst] = true
+        apply(inst)
+        inst:GetPropertyChangedSignal("Text"):Connect(function()
+            if busy[inst] then return end
+            lastText[inst] = nil
+            task.defer(apply, inst)
+        end)
+    end
+
+    local function watch(gui)
+        if not gui then return end
+        for _, d in ipairs(gui:GetDescendants()) do
+            hook(d)
+        end
+        gui.DescendantAdded:Connect(function(d)
+            task.defer(hook, d)
+        end)
+    end
+
+    -- 只等選單出現，掛一次事件，不再定時全掃
+    for _ = 1, 40 do
+        local lib = rawget(sharedEnv, "Library")
+        if type(lib) == "table" and typeof(lib.ScreenGui) == "Instance" then
+            watch(lib.ScreenGui)
+            break
+        end
+        task.wait(0.25)
+    end
+end)
+
+return __ue_result
